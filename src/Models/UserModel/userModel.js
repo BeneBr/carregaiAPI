@@ -54,6 +54,9 @@ const UserSchema = mongoose.Schema({
     active: {
         type: Boolean,
     },
+    codeVerification: {
+        type: String,
+    },
     car:
         {
             brand: String,

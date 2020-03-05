@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
-
 module.exports = {
     async getUsers(req, res){
         try{
@@ -17,13 +16,12 @@ module.exports = {
                 return res.status(400).send({message: "PARAMETER ERROR"});
             }
             var update = await User.updateOne({cpf: req.body.cpf}, {$set: {photo: req.body.photo}});
-            user = await User.findOne({cpf: req.body.cpf});
 
-            return res.status(201).send({message: "PHOTO UPLOADED", user, user});
+            return res.status(201).send({message: "PHOTO UPLOADED"});
             
         }catch(err){
             return res.status(400).send({message: "ERROR"});
         }
-    }
+    },
 }
 

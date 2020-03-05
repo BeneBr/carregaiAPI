@@ -26,6 +26,7 @@ app.get("/", (req, res)=>{
 });
 
 app.use(authRoutes);
+
 app.use(userRoutes);
 
 app.listen(PORT,HOST);
