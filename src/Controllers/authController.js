@@ -13,7 +13,7 @@ module.exports = {
             }
             var userExist = await User.find({cpf: req.body.cpf});
             if(userExist.length > 0){
-               return res.status(400).send({message: "User Already Exists"}); 
+               return res.status(401).send({message: "User Already Exists"}); 
             }else{
                 const user = await User.create(req.body);
                 return res.status(201).send({message: "Created with sucess"});
@@ -45,14 +45,12 @@ module.exports = {
     },
     async forgotPassword(req, res){
         try{
-            console.log(req.body.cpf)
             if(!req.body.cpf){
                 return res.status(400).send({message: "PARAMETER ERROR"});
             }
             var user = await User.findOne({cpf: req.body.cpf});
-            console.log(user);
             if(user == null){
-                res.status(400).send({message: "USER NOT FOUND"});
+                res.status(401).send({message: "USER NOT FOUND"});
             }else{
                 const digit1 = Math.floor(Math.random() * 9).toString();
                 const digit2 = Math.floor(Math.random() * 9).toString();
@@ -61,7 +59,32 @@ module.exports = {
                 const digit5 = Math.floor(Math.random() * 9).toString();
                 const code = digit1+digit2+digit3+digit4+digit5;
                 var update = await User.updateOne({cpf: req.body.cpf}, {$set: {codeVerification: code}});
+                var sender = nodemailer.createTransport({service: 'gmail', auth: {user: 'gustavo.berned2@gmail.com', pass: 'gesac2012'}});
+                var email = mailOption = {from: 'gustavo.berned2@gmail.com', to: 'gustavo.berned2@gmail.com', subject: 'CODIGO DE VERIFICAÇÃO', text: code}
+                sender.sendMail(email, function(error, info){
+                  if(error){
+                      console.log(error);
+                  }else{
+                      console.log(info.response);
+                  }  
+                });
+                
                 return res.status(200).send({message: 'ok'});
+            }
+        }catch(err){
+
+        }
+    },
+    async codeVerify(req, res){
+        try{
+            if(!req.body.cpf || req.body.codeVerification){
+                return res.status(400).send({message: "PARAMETTER ERROR"});
+            }
+            var user = await User.findOne({cpf: req.body.cpf});
+            if(user.codeVerification != req.body.codeVerification){
+                return res.status(401).send({message: "INVALID CODE"});
+            }else{
+                return res.status(200).message({message: "CODE OK"});
             }
         }catch(err){
 
