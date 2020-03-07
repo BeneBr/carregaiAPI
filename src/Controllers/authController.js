@@ -49,6 +49,7 @@ module.exports = {
                 return res.status(400).send({message: "PARAMETER ERROR"});
             }
             var user = await User.findOne({cpf: req.body.cpf});
+            var userEmail = await user.email;
             if(user == null){
                 res.status(401).send({message: "USER NOT FOUND"});
             }else{
@@ -58,21 +59,23 @@ module.exports = {
                 const digit4 = Math.floor(Math.random() * 9).toString();
                 const digit5 = Math.floor(Math.random() * 9).toString();
                 const code = digit1+digit2+digit3+digit4+digit5;
-                var update = await User.updateOne({cpf: req.body.cpf}, {$set: {codeVerification: code}});
-                var sender = nodemailer.createTransport({service: 'gmail', auth: {user: 'gustavo.berned2@gmail.com', pass: 'gesac2012'}});
-                var email = mailOption = {from: 'gustavo.berned2@gmail.com', to: 'gustavo.berned2@gmail.com', subject: 'CODIGO DE VERIFICAÇÃO', text: code}
-                sender.sendMail(email, function(error, info){
-                  if(error){
-                      console.log(error);
-                  }else{
-                      console.log(info.response);
-                  }  
-                });
-                
-                return res.status(200).send({message: 'ok'});
-            }
-        }catch(err){
 
+                var update = await User.updateOne({cpf: req.body.cpf}, {$set: {codeVerification: code}});
+                
+               var transport = nodemailer.createTransport({host: 'smtp.mailtrap.io', port: '2525', auth: {user:'aa1edc4caa03fd',pass:'96d7d6cfeb67ea'}});
+               var mailOptions = {from: 'nao_responder@carregaai.com.br', to: userEmail, subject: 'CODIGO DE VERIFICAÇÃO', text: code} 
+               
+               transport.sendMail(mailOptions, function(err,info){
+                if(err){
+                    return res.status(400).send({message: "ERROR"});
+                }else{
+                    return res.status(200).send({email: userEmail});
+                }
+               });
+               
+            }
+            }catch(err){
+                console.log(err);
         }
     },
     async codeVerify(req, res){
