@@ -63,7 +63,7 @@ module.exports = {
                 var update = await User.updateOne({cpf: req.body.cpf}, {$set: {codeVerification: code}});
                 
                var transport = nodemailer.createTransport({host: 'smtp.mailtrap.io', port: '2525', auth: {user:'aa1edc4caa03fd',pass:'96d7d6cfeb67ea'}});
-               var mailOptions = {from: 'nao_responder@carregaai.com.br', to: userEmail, subject: 'CODIGO DE VERIFICAÇÃO', text: code} 
+               var mailOptions = {from: 'naoresponder@carregaai.com.br', to: userEmail, subject: 'CODIGO DE VERIFICAÇÃO', text: code} 
                
                transport.sendMail(mailOptions, function(err,info){
                 if(err){
