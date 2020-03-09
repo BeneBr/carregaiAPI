@@ -80,17 +80,17 @@ module.exports = {
     },
     async codeVerify(req, res){
         try{
-            if(!req.body.cpf || req.body.codeVerification){
-                return res.status(400).send({message: "PARAMETTER ERROR"});
+            if(!req.body.cpf || !req.body.code){
+                return res.status(400).send({message: "PARAMETER ERROR"});
             }
             var user = await User.findOne({cpf: req.body.cpf});
-            if(user.codeVerification != req.body.codeVerification){
-                return res.status(401).send({message: "INVALID CODE"});
-            }else{
-                return res.status(200).message({message: "CODE OK"});
-            }
+            const codeVerification = await user.codeVerification;
+            if(req.body.codeVerification != codeVerification){
+                return res.status(200).send({message: "CODE OK"});
+            }    
+            return res.status(404).send({message: "CODE NOT FOUND"});
         }catch(err){
-
+            console.log(err);
         }
     }
 }
