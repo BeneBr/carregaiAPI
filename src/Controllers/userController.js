@@ -12,6 +12,7 @@ module.exports = {
     }, 
     async updateImage(req, res){
         try{
+            console.log(req.body);
             if(!req.body.cpf && !req.body.photo){
                 return res.status(400).send({message: "PARAMETER ERROR"});
             }

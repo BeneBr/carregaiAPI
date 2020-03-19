@@ -2,24 +2,28 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const UserSchema = mongoose.Schema({
-    fullName: {
+    nomeRazao: {
         type: String,
         require: true,
         lowercase: false,
     },
-    cpf: {
+    cpfCnpj: {
         type: String,
         require: true,
     },
-    phone: {
+    telefone: {
         type: String,
-        require: true
+        require: true,
+    },
+    empresa:{
+        type: Boolean,
+        require: true,
     },
     password: {
         type: String,
         require: true,
     },
-    photo: {
+    foto: {
         type: String,
     },
     createdAt: {
@@ -30,38 +34,38 @@ const UserSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    totalRAtting: {
+    totalPontos: {
         type: Number,
         default: 0
     },
-    totalVotes: {
+    VotosTotais: {
         type: Number,
         default: 0,
     },
-    ratting: {
+    pontos: {
         type: Number,
         default: 0,
     },
-    balance: {
+    saldo: {
         type: Number,
     },
-    totalDeliverys: {
+    totalEntregas: {
         type: Number,
     },
-    totalDemands: {
+    totalDemandas: {
         type: Number,
     },
-    active: {
+    ativo: {
         type: Boolean,
     },
     codeVerification: {
         type: String,
     },
-    car:
+    veiculo:
         {
-            brand: String,
-            model: String,
-            board: String,
+            marca: String,
+            modelo: String,
+            placa: String,
             color: String
         } 
 });

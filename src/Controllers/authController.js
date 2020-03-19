@@ -8,36 +8,37 @@ const nodemailer = require('nodemailer');
 module.exports = {
     async register(req, res){
         try{
-            if(!req.body.fullName || !req.body.cpf || !req.body.phone || !req.body.password || !req.body.email){
-                return res.status(400).send({message: "Parameter Error"})
+            console.log(req.body)
+            if(!req.body.nomeRazao || !req.body.cpfCnpj || !req.body.telefone || !req.body.password || !req.body.email){
+                return res.status(400).send({mensagem: "Erro nos Parâmetros"})
             }
-            var userExist = await User.find({cpf: req.body.cpf});
+            var userExist = await User.find({cpfCnpj: req.body.cpfCnpj});
             if(userExist.length > 0){
-               return res.status(401).send({message: "User Already Exists"}); 
+               return res.status(400).send({mensagem: "Usuario já cadastrado"}); 
             }else{
                 const user = await User.create(req.body);
-                return res.status(201).send({message: "Created with sucess"});
+                return res.status(201).send({mensagem: "Criado com Sucesso"});
             }
         }catch(err){
-            return res.status(400).send({error: "Bad request"});
+            return res.status(400).send({mensagem: "ERRO INEXPERADO"});
         }
     },
     async login(req, res){
         try{
-            if(!req.body.cpf || !req.body.password){
+            if(!req.body.cpfCnpj || !req.body.password){
                 return res.status(400).send({message: "Parameter Error"});
             }
-            var user = await User.findOne({cpf: req.body.cpf});
+            var user = await User.findOne({cpfCnpj: req.body.cpfCnpj});
             if(!user){
-                return res.status(400).send({message: "USER NOT FOUND"});
+                return res.status(404).send({mensagem: "Usuário Não Encontrado"});
             }
             if(!await bcrypt.compare(req.body.password, user.password)){
-                return res.status(400).send({message: "INVALID PASSWORD"});
+                return res.status(404).send({mensagem: "Senha Incorreta"});
             }
-            const userData = {fullName: user.fullName, cpf: user.cpf, ratting: user.ratting, photo: user.photo, phone: user.phone, email: user.email};
-            const token = jwt.sign({cpf: user.cpf, id: user.id}, authConfig.secret, {expiresIn: 1800});
+            const userData = {nomeRazao: user.nomeRazao, cpfCnpj: user.cpfCnpj, pontos: user.pontos, foto: user.foto, telefone: user.telefone, email: user.email};
+            const token = jwt.sign({cpfCnpj: user.cpfCnpj, id: user.id}, authConfig.secret, {expiresIn: 1800});
             user.password = undefined;
-            return res.status(200).send({message: 'SUCESS LOGIN',token: token, user: userData});
+            return res.status(200).send({mensagem: 'Login Realizado com Sucesso',token: token, user: userData});
 
         }catch(err){
             return res.status(400).send(err);
@@ -80,12 +81,13 @@ module.exports = {
     },
     async codeVerify(req, res){
         try{
+            console.log(req.body.cpf, req.body.code)
             if(!req.body.cpf || !req.body.code){
                 return res.status(400).send({message: "PARAMETER ERROR"});
             }
             var user = await User.findOne({cpf: req.body.cpf});
             const codeVerification = await user.codeVerification;
-            if(req.body.codeVerification != codeVerification){
+            if(req.body.codeVerification == codeVerification){
                 return res.status(200).send({message: "CODE OK"});
             }    
             return res.status(404).send({message: "CODE NOT FOUND"});
