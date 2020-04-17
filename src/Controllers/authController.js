@@ -8,7 +8,6 @@ const nodemailer = require('nodemailer');
 module.exports = {
     async register(req, res){
         try{
-            console.log(req.body)
             if(!req.body.nomeRazao || !req.body.cpfCnpj || !req.body.telefone || !req.body.password || !req.body.email){
                 return res.status(400).send({mensagem: "Erro nos Parâmetros"})
             }
@@ -17,6 +16,7 @@ module.exports = {
                return res.status(400).send({mensagem: "Usuario já cadastrado"}); 
             }else{
                 const user = await User.create(req.body);
+                console.log(user);
                 return res.status(201).send({mensagem: "Criado com Sucesso"});
             }
         }catch(err){
