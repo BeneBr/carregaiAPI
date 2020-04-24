@@ -12,16 +12,14 @@ module.exports = {
     }, 
     async updateImage(req, res){
         try{
-            console.log(req.body);
-            if(!req.body.cpf && !req.body.photo){
-                return res.status(400).send({message: "PARAMETER ERROR"});
+            if(!req.body.cpfCnpj && !req.body.foto){
+                return res.status(400).send({message: "ERRO NOS PARAMETROS"});
             }
-            var update = await User.updateOne({cpf: req.body.cpf}, {$set: {photo: req.body.photo}});
-
-            return res.status(201).send({message: "PHOTO UPLOADED"});
+            var update = await User.updateOne({cpfCnpj: req.body.cpfCnpj}, {$set: {foto: req.body.foto}});
+            return res.status(201).send({message: "FOTO ATUALIZADA"});
             
         }catch(err){
-            return res.status(400).send({message: "ERROR"});
+            return res.status(400).send({message: "ERRO INEXPERADO"});
         }
     },
 }

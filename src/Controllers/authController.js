@@ -16,7 +16,6 @@ module.exports = {
                return res.status(400).send({mensagem: "Usuario já cadastrado"}); 
             }else{
                 const user = await User.create(req.body);
-                console.log(user);
                 return res.status(201).send({mensagem: "Criado com Sucesso"});
             }
         }catch(err){

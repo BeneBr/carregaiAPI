@@ -7,7 +7,6 @@ const userRoute = express.Router();
 
 userRoute.use(authMiddleWare);
 
-
 userRoute.post('/user/image', userController.updateImage);
 userRoute.get('/users', userController.getUsers);
 

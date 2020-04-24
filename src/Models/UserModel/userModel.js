@@ -19,11 +19,11 @@ const UserSchema = mongoose.Schema({
         type: Boolean,
         require: true,
     },
-    password: {
+    password:{
         type: String,
         require: true,
     },
-    foto: {
+    foto:{
         type: String,
     },
     createdAt: {
@@ -36,7 +36,7 @@ const UserSchema = mongoose.Schema({
     },
     totalPontos: {
         type: Number,
-        default: 0
+        default: 0.0
     },
     VotosTotais: {
         type: Number,
@@ -44,7 +44,7 @@ const UserSchema = mongoose.Schema({
     },
     pontos: {
         type: Number,
-        default: 0,
+        default: 0.0,
     },
     saldo: {
         type: Number,
